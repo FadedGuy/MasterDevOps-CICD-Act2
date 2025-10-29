@@ -1,4 +1,5 @@
 import app
+from math import sqrt, log10
 
 
 class InvalidPermissions(Exception):
@@ -14,8 +15,8 @@ class Calculator:
         self.check_types(x, y)
         return x - y
 
-    def multiply(self, x, y):
-        if not app.util.validate_permissions(f"{x} * {y}", "user1"):
+    def multiply(self, x, y, user):
+        if not app.util.validate_permissions(f"{x} * {y}", user):
             raise InvalidPermissions('User has no permissions')
 
         self.check_types(x, y)
@@ -32,9 +33,24 @@ class Calculator:
         self.check_types(x, y)
         return x ** y
 
-    def check_types(self, x, y):
-        if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
-            raise TypeError("Parameters must be numbers")
+    def sqrt(self, x): 
+        self.check_types(x)
+        if x < 0:
+            raise TypeError("Cannot calculate square root of a negative number")
+        
+        return sqrt(x)
+    
+    def log10(self, x):
+        self.check_types(x)
+        if x <= 0:
+            raise TypeError("Log10 undefined for zero or negative numbers")
+
+        return log10(x)
+
+    def check_types(self, *args):
+        for arg in args:
+            if not isinstance(arg, (int, float)):
+                raise TypeError("Parameters must be numbers")
 
 
 if __name__ == "__main__":  # pragma: no cover
